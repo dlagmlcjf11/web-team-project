@@ -1,3 +1,27 @@
+const users = [
+    { 
+        id: 'user1', 
+        pw: 'pass1', 
+        name: '김코딩', 
+        expiresAt: '2025-01-20', 
+        locker: { number: 'A-15', password: '1234' }
+    },
+    { 
+        id: 'user2', 
+        pw: 'pass2', 
+        name: '박개발', 
+        expiresAt: '2024-12-19', 
+        locker: null
+    },
+    { 
+        id: 'admin', 
+        pw: 'admin', 
+        name: '관리자', 
+        expiresAt: '2026-12-31', 
+        locker: { number: 'C-01', password: '9999' }
+    }
+];
+
 const faqData = [
     {
         question: '헬스장 어디가 좋아요?',
