@@ -110,7 +110,7 @@ const announcements = [
 
 const couponData = {
     "XMAS2025": 0.20,
-    "STREAK14": 0.05
+    "STREAK5": 0.05
 };
 
 
