@@ -3,19 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>운동 안내 - K-GYM</title>
+    <title>운동 기구 가이드 - K-GYM</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 추가적인 가이드 페이지 스타일 (인라인 스타일 대신 여기에 정의하여 깔끔하게 만듦) */
+        .equipment-card {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .equipment-card h3 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+        .equipment-image {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            cursor: pointer; /* 클릭 가능하도록 커서 변경 */
+            position: relative;
+        }
+        .equipment-image::after {
+            /* 재생 버튼 아이콘 (Play button overlay) */
+            content: "▶";
+            position: absolute;
+            font-size: 50px;
+            color: white;
+            opacity: 0.8;
+            pointer-events: none; /* 클릭 이벤트가 이미지에 전달되도록 설정 */
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        .equipment-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지가 영역을 꽉 채우도록 설정 */
+        }
+        .equipment-detail {
+            text-align: left;
+            width: 100%;
+        }
+        .equipment-detail strong {
+            color: #007bff;
+        }
+        
+        /* 동영상 모달 스타일 */
+        #video-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        #video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+        }
+        /* 동영상 비율 유지 (16:9) */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 비율 */
+            height: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        #close-btn {
+            color: white;
+            float: right;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 30px;
+            z-index: 1001;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        #close-btn:hover {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
 
     <div class="main-container">
         <div class="container">
+            
+            <!-- 운동 기구 가이드 섹션 -->
             <section class="section">
-                <h2 class="section-title">운동 안내</h2>
-                <div class="card">
-                    <p>운동 기구 및 사용법 안내가 여기에 표시됩니다.</p>
+                <h2 class="section-title">운동 기구 사용 가이드</h2>
+                
+                <!-- 1. 랫풀다운 (Lat Pulldown) -->
+                <div class="card equipment-card">
+                    <h3>1. 랫풀다운 (Lat Pulldown)</h3>
+                    <div class="equipment-image" onclick="showVideo('latpulldown')">
+                        <!-- 랫풀다운 기구 이미지 추가: 'images/latpulldown.jpg' 경로를 사용했습니다. -->
+                        <img src="images/latpulldown.jpg" alt="랫풀다운 기구 이미지" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/300x200/cccccc/333333?text=랫풀다운+이미지+준비중';"/>
+                    </div>
+                    <div class="equipment-detail">
+                        <p><strong>주요 운동 부위:</strong> 등 근육 (광배근), 이두근</p>
+                        <p><strong>설명:</strong> 등 상부와 측면 근육을 넓고 두껍게 만드는 데 효과적인 운동입니다. 앉은 자세에서 바(Bar)를 잡고 광배근의 수축을 느끼면서 가슴 쪽으로 당깁니다. 어깨가 으쓱되지 않도록 주의해야 합니다.</p>
+                        <p><strong>팁:</strong> 그립을 넓게 잡을수록 등 바깥쪽(광배근의 넓이)이 발달하고, 좁게 잡을수록 등 안쪽과 두께가 발달합니다.</p>
+                    </div>
                 </div>
+
+                <!-- 2. 펙덱플라이 (Pec Deck Fly) -->
+                <div class="card equipment-card">
+                    <h3>2. 펙덱플라이 (Pec Deck Fly)</h3>
+                    <div class="equipment-image" onclick="showVideo('pecdeckfly')">
+                        <!-- 펙덱플라이 기구 이미지 추가: 'images/pecdeckfly.jpg' 경로를 사용했습니다. -->
+                        <img src="images/pecdeckfly.jpg" alt="펙덱플라이 기구 이미지" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/300x200/cccccc/333333?text=펙덱플라이+이미지+준비중';"/>
+                    </div>
+                    <div class="equipment-detail">
+                        <p><strong>주요 운동 부위:</strong> 가슴 근육 (대흉근 중앙)</p>
+                        <p><strong>설명:</strong> 가슴 근육의 중앙 부분을 집중적으로 고립시켜 운동하는 데 사용됩니다. 벤치프레스나 푸시업으로는 자극하기 어려운 가슴의 안쪽 라인을 다듬는 데 효과적입니다. 어깨 관절에 무리가 가지 않도록 주의하며 패드를 밀어줍니다.</p>
+                        <p><strong>팁:</strong> 팔꿈치를 살짝 굽힌 상태를 유지하고, 가슴을 최대한 모아준다는 느낌으로 동작을 수행하세요.</p>
+                    </div>
+                </div>
+
+                <!-- 3. 레그 익스텐션 (Leg Extension) -->
+                <div class="card equipment-card">
+                    <h3>3. 레그 익스텐션 (Leg Extension)</h3>
+                    <div class="equipment-image" onclick="showVideo('legextension')">
+                        <!-- 레그 익스텐션 기구 이미지 추가: 'images/legextension.jpg' 경로를 사용했습니다. -->
+                        <img src="images/legextension.jpg" alt="레그 익스텐션 기구 이미지" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/300x200/cccccc/333333?text=레그익스텐션+이미지+준비중';"/>
+                    </div>
+                    <div class="equipment-detail">
+                        <p><strong>주요 운동 부위:</strong> 허벅지 앞쪽 (대퇴사두근)</p>
+                        <p><strong>설명:</strong> 허벅지 앞쪽 근육인 대퇴사두근을 발달시키는 데 최적화된 기구입니다. 무릎 관절의 움직임만으로 근육을 수축시키기 때문에 다른 근육의 개입 없이 목표 부위에 집중할 수 있습니다. 무릎 통증이 있는 경우 가볍게 시작해야 합니다.</p>
+                        <p><strong>팁:</strong> 발목 패드가 정강이 아래에 위치하도록 조절하고, 최고 수축 지점에서 1~2초간 멈췄다가 천천히 내리세요.</p>
+                    </div>
+                </div>
+
             </section>
+        </div>
+    </div>
+
+    <!-- 동영상 모달 구조 -->
+    <div id="video-modal">
+        <span id="close-btn" onclick="closeVideoModal()">&times;</span>
+        <div id="video-modal-content">
+            <!-- Content will be injected by JS -->
         </div>
     </div>
 
@@ -23,5 +184,66 @@
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
     <script src="js/payment.js"></script>
+    
+    <script>
+        // 운동 기구별 로컬 비디오 파일 경로 (가상 경로)
+        // 사용자는 이 경로에 실제로 video 폴더와 .mp4 파일을 배치해야 합니다.
+        const videoUrls = {
+            'latpulldown': 'videos/latpulldown.mp4', 
+            'pecdeckfly': 'videos/pecdeckfly.mp4',
+            'legextension': 'videos/legextension.mp4'
+        };
+
+        let currentVideoElement = null; // 현재 재생 중인 비디오 요소를 추적
+
+        // 동영상 모달 열기
+        window.showVideo = function(key) {
+            const videoPath = videoUrls[key];
+            const modal = document.getElementById('video-modal');
+            const content = document.getElementById('video-modal-content');
+            
+            // 모달에 `<video>` 태그 주입
+            content.innerHTML = `
+                <div class="video-wrapper">
+                    <video id="local-video-player" controls autoplay playsinline muted loop>
+                        <source src="${videoPath}" type="video/mp4">
+                        <p style="color: white; padding: 20px; text-align: center;">비디오 파일을 로드할 수 없습니다. (경로: ${videoPath})</p>
+                    </video>
+                </div>
+            `;
+            
+            currentVideoElement = document.getElementById('local-video-player');
+
+            if (currentVideoElement) {
+                // 비디오 재생 시도 (자동 재생 실패 가능성을 줄이기 위해)
+                currentVideoElement.play().catch(error => {
+                    console.warn("비디오 자동 재생 실패:", error);
+                    // 자동 재생 실패 시 사용자에게 안내
+                    content.querySelector('p').textContent = `[경로: ${videoPath}] 파일을 찾을 수 없거나 자동 재생이 차단되었습니다. 재생 버튼을 눌러주세요.`;
+                });
+            }
+
+
+            modal.style.display = 'flex'; // 모달 표시
+        };
+
+        // 동영상 모달 닫기
+        window.closeVideoModal = function() {
+            if (currentVideoElement) {
+                currentVideoElement.pause(); // 비디오 일시 정지
+                currentVideoElement = null;
+            }
+            document.getElementById('video-modal').style.display = 'none'; // 모달 숨기기
+            document.getElementById('video-modal-content').innerHTML = ''; // 내용 초기화
+        };
+
+        // 모달 영역 외 클릭 시 닫기
+        document.getElementById('video-modal').addEventListener('click', function(event) {
+            // 모달 컨텐츠 영역을 클릭하지 않았을 때만 닫기
+            if (event.target === this || event.target.closest('#close-btn')) {
+                closeVideoModal();
+            }
+        });
+    </script>
 </body>
 </html>

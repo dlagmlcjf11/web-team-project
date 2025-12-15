@@ -1,35 +1,162 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Populate announcements on announcements.html
-    const announcementsList = document.getElementById('announcements-list');
-    if (announcementsList && typeof announcements !== 'undefined') { // Check if announcements array exists
-        
-        // Sort announcements by date in descending order (newest first)
-        announcements.sort((a, b) => new Date(b.date) - new Date(a.date));
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지 - K-GYM</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-        announcements.forEach(announcement => {
-            const announcementElement = document.createElement('div');
-            announcementElement.classList.add('announcement-item');
+    <div class="main-container">
+        <div class="container">
             
-            // Add ID for direct linking from main page
-            if (announcement.id) {
-                announcementElement.id = announcement.id;
-            }
-            announcementElement.innerHTML = `
-                <h3>${announcement.title}</h3>
-                <p class="announcement-date">${announcement.date}</p>
-                <p>${announcement.content}</p>
-            `;
-            announcementsList.appendChild(announcementElement);
-        });
-    }
+            <!-- 1. 공지사항 섹션 -->
+            <section class="section">
+                <h2 class="section-title">공지사항</h2>
+                
+                <!-- 게시판 목록 (클릭 시 숨겨짐) -->
+                <div id="announcements-list" style="border-top: 2px solid #333; font-family: sans-serif; max-width: 800px; margin: 0 auto;">
+                    
+                    <!-- 공지사항 4 (크리스마스 이벤트, JS 배열 index 3) -->
+                    <div class="announcement-item" data-index="3" onclick="showAnnouncementDetail(3)" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 1.1em;">크리스마스 특별 이벤트!</h3>
+                        <p style="font-size: 0.85em; color: #777; margin: 0 0 10px 0;">2025-12-20</p>
+                        <p style="margin: 0; font-size: 0.95em;">크리스마스를 맞이하여 특별 할인을 제공합니다. 할인 코드를 확인하고 등록하세요!</p>
+                    </div>
 
-    // Handle X-mas event click on index.html
-    const xmasEventLink = document.getElementById('xmas-event');
-    if (xmasEventLink) {
-        xmasEventLink.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default link behavior
-            alert('크리스마스 할인코드: X-MAS2025! 지금 등록하고 20% 할인 받으세요!');
-            window.location.href = 'profile.html'; // Redirect to registration/profile page
-        });
-    }
-});
+                    <!-- 공지사항 1: 크리스마스 휴관 안내 (JS 배열 index 0) -->
+                    <div class="announcement-item" data-index="0" onclick="showAnnouncementDetail(0)" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 1.1em; color: #d9534f;">크리스마스 휴관 안내</h3>
+                        <p style="font-size: 0.85em; color: #777; margin: 0 0 10px 0;">2025-12-20</p>
+                        <p style="margin: 0; font-size: 0.95em;">12월 25일(수)은 크리스마스 휴관입니다. 이용에 착오 없으시길 바랍니다.</p>
+                    </div>
+
+
+                    <!-- 공지사항 2: 12월 회원 모집 안내 (JS 배열 index 1) -->
+                    <div class="announcement-item" data-index="1" onclick="showAnnouncementDetail(1)" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 1.1em;">12월 회원 모집 안내</h3>
+                        <p style="font-size: 0.85em; color: #777; margin: 0 0 10px 0;">2025-12-01</p>
+                        <p style="margin: 0; font-size: 0.95em;">새로운 운동 계획, K-GYM과 함께 시작하세요! 지금 등록하고 다양한 혜택을 누리세요. 선착순 마감!</p>
+                    </div>
+                    
+                    <!-- 공지사항 3: 시설 보수 공사 안내 (JS 배열 index 2) -->
+                    <div class="announcement-item" data-index="2" onclick="showAnnouncementDetail(2)" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 1.1em;">시설 보수 공사 안내</h3>
+                        <p style="font-size: 0.85em; color: #777; margin: 0 0 10px 0;">2025-11-15</p>
+                        <p style="margin: 0; font-size: 0.95em;">11월 20일부터 22일까지 헬스장 일부 시설 보수 공사가 진행됩니다. 양해 부탁드립니다.</p>
+                    </div>
+
+                    
+                </div>
+                
+                <!-- 공지 상세 보기 영역 (처음에는 숨겨짐) -->
+                <div id="detail-view" style="display: none; padding: 20px; border: 1px solid #ddd; max-width: 800px; margin: 0 auto; border-radius: 8px; background-color: #fefefe;">
+                    <button onclick="hideDetailView()" style="background: none; border: 1px solid #ccc; padding: 8px 15px; cursor: pointer; border-radius: 4px; margin-bottom: 20px; font-weight: bold; color: #555;">
+                        &lt; 목록으로 돌아가기
+                    </button>
+                    <h3 id="detailTitle" style="border-bottom: 2px solid #333; padding-bottom: 5px; margin-top: 0;"></h3>
+                    <p id="detailDate" style="font-size: 0.9em; color: #777;"></p>
+                    <div id="detailContent" style="margin-top: 20px; line-height: 1.6; white-space: pre-wrap;"></div>
+                    
+                    <!-- 회원 등록 링크 (인덱스 1 전용) -->
+                    <div id="linkToRegistration" onclick="window.location.href='profile.html'" 
+                         style="margin-top: 20px; font-weight: bold; color: #007bff; cursor: pointer; text-align: right; text-decoration: underline; display: none;">
+                        회원 등록하러 가기 >>
+                    </div>
+
+                    <!-- 할인 코드 확인 링크 (인덱스 3 전용) -->
+                    <div id="linkToProfile" onclick="promptForDiscountCode()" 
+                         style="margin-top: 10px; font-weight: bold; color: #007bff; cursor: pointer; text-align: right; text-decoration: underline; display: none;">
+                        할인 코드 확인 >>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+    
+    <script src="js/layout.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/payment.js"></script>
+    
+    <script>
+        // 공지사항 상세 데이터
+        const announcementsData = [
+            {
+                title: "크리스마스 휴관 안내",
+                date: "2025-12-20",
+                summary: "12월 25일(수)은 크리스마스 휴관입니다. 이용에 착오 없으시길 바랍니다.",
+                detail: "12월 25일(수)은 법정 공휴일인 크리스마스입니다. 당일은 시설 전체 휴관이오니 이용에 착오 없으시길 바랍니다. 재등록 및 문의는 휴관일 다음 날부터 가능합니다.\n\nK-GYM은 회원님의 안전과 편의를 위해 최선을 다하겠습니다."
+            },
+            {
+                title: "12월 회원 모집 안내",
+                date: "2025-12-01",
+                summary: "새로운 운동 계획, K-GYM과 함께 시작하세요! 지금 등록하고 다양한 혜택을 누리세요. 선착순 마감!",
+                detail: "12월 신규 회원을 모집합니다. 연말 특가 프로모션으로 3개월 등록 시 1개월 추가 혜택을 드립니다. PT 등록 시 운동복을 무료로 제공하며, 선착순 50명 마감입니다. 등록 문의는 데스크 또는 유선 전화(02-1234-5678)로 연락 주시기 바랍니다."
+            },
+            {
+                title: "시설 보수 공사 안내",
+                date: "2025-11-15",
+                summary: "11월 20일부터 22일까지 헬스장 일부 시설 보수 공사가 진행됩니다. 양해 부탁드립니다.",
+                detail: "시설 노후화 방지 및 안전 점검을 위해 11월 20일(목)부터 22일(토)까지 3일간 일부 샤워실 및 락커룸에 대한 보수 공사가 진행될 예정입니다. 운동 시설 자체는 정상 운영되오나, 이용에 불편함이 없도록 양해 부탁드립니다. 공사 기간 중 샤워실 사용이 제한될 수 있습니다."
+            },
+            {
+                title: "크리스마스 특별 이벤트!",
+                date: "2025-12-20",
+                summary: "크리스마스를 맞이하여 특별 할인을 제공합니다. 할인 코드를 확인하고 등록하세요!",
+                detail: "다가오는 크리스마스를 기념하여 특별 이벤트를 진행합니다! 12월 24일부터 26일까지 등록하는 신규 회원에게는 20% 할인 혜택을 드립니다. 할인 코드는 'XMAS2025'이며, 등록 시 데스크에 제시해 주세요. 이번 기회를 놓치지 마시고 건강한 연말 보내세요!"
+
+            }
+        ];
+
+        // [새로 추가된 함수] 할인코드 표시 및 페이지 이동 프롬프트
+        window.promptForDiscountCode = function() {
+            // 사용자에게 할인 코드와 이동 알림을 띄웁니다.
+            alert("크리스마스 특별 할인 코드: XMAS2025\n등록 페이지로 이동합니다.");
+            
+            // 확인 버튼을 누르면 profile.html로 이동합니다.
+            window.location.href='profile.html';
+        };
+
+
+        // 공지 상세 보기 (게시글 창으로 전환)
+        window.showAnnouncementDetail = function(index) {
+            const data = announcementsData[index];
+            if (!data) return;
+            
+            const registrationLink = document.getElementById('linkToRegistration');
+            const profileLink = document.getElementById('linkToProfile');
+
+            // 상세 내용 채우기
+            document.getElementById('detailTitle').textContent = data.title;
+            document.getElementById('detailDate').textContent = `작성일: ${data.date}`;
+            document.getElementById('detailContent').textContent = data.detail;
+            
+            // 모든 링크 숨김 처리
+            registrationLink.style.display = 'none';
+            profileLink.style.display = 'none';
+            
+            // 인덱스에 따라 특정 링크 표시
+            if (index === 1) { // 12월 회원 모집 안내
+                registrationLink.style.display = 'block';
+            } else if (index === 3) { // 크리스마스 특별 이벤트!
+                profileLink.style.display = 'block';
+            }
+            
+            // 화면 전환: 목록 숨기고 상세 보기 표시
+            document.getElementById('announcements-list').style.display = 'none';
+            document.getElementById('detail-view').style.display = 'block';
+        };
+
+        // 목록으로 돌아가기 (게시판 창으로 전환)
+        window.hideDetailView = function() {
+            // 화면 전환: 상세 보기 숨기고 목록 표시
+            document.getElementById('detail-view').style.display = 'none';
+            document.getElementById('announcements-list').style.display = 'block';
+        };
+        
+    </script>
+</body>
+</html>
