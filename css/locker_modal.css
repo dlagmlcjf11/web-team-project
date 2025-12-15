@@ -1,0 +1,159 @@
+/* 
+Locker Modal Styles
+- Aligned with the design system from layout.css
+*/
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Initially hidden */
+    z-index: 1000;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--color-surface);
+    padding: 24px;
+    border-radius: var(--border-radius-m);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    display: none; /* Initially hidden */
+    z-index: 1001;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-text);
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--color-text-light);
+    transition: color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    color: var(--color-text);
+}
+
+.modal-body p {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-light);
+}
+
+#locker-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between rows */
+    margin: 1.5rem 0;
+    padding: 10px;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-s);
+}
+
+.locker-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px; /* Space between lockers in a row */
+}
+
+.locker-box {
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-s);
+    text-align: center;
+    font-weight: bold;
+    cursor: not-allowed;
+    user-select: none;
+    flex-basis: 60px;
+    flex-grow: 1;
+    transition: all 0.2s ease-in-out;
+}
+
+.locker-box.available {
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+}
+
+.locker-box.available:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.locker-box.unavailable {
+    background-color: var(--color-background);
+    color: var(--color-text-light);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.locker-box.selected {
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+    border-color: var(--color-primary);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(66, 74, 83, 0.4);
+}
+
+#locker-registration-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#locker-registration-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+#locker-registration-form input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-s);
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+#locker-registration-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(66, 74, 83, 0.2);
+}
+
+#locker-registration-form input:disabled {
+    background-color: var(--color-background);
+    cursor: not-allowed;
+}
+
+.modal.active,
+.modal-overlay.active {
+    display: block;
+}
