@@ -16,6 +16,39 @@
             width: 100%;
             max-width: 900px;
         }
+
+        /* --- 상단 헤더 스타일 추가 --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            background-color: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .header .nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .header .nav a:hover {
+            color: #007bff;
+        }
+        .header .profile-icon {
+            font-size: 1.5em;
+            color: #555;
+            cursor: pointer;
+        }
+        /* --- 헤더 스타일 끝 --- */
         
         /* --- 1. 운동 기구 가이드 스타일 --- */
         .equipment-card {
@@ -207,6 +240,19 @@
     </style>
 </head>
 <body>
+    <!-- 상단 헤더 마크업 추가 -->
+    <header class="header">
+        <div class="logo">K-GYM</div>
+        <nav class="nav">
+            <a href="intro.html">헬스장 소개</a>
+            <a href="announcements.html">공지</a>
+            <a href="guide.html">운동 안내</a>
+            <a href="#">고객센터</a>
+        </nav>
+        <!-- Font Awesome 아이콘을 사용할 수 없으므로, 기본 문자 아이콘을 사용 -->
+        <a href="profile.html" class="profile-icon">👤</a> 
+    </header>
+    <!-- 헤더 마크업 끝 -->
 
     <div class="main-container">
         <div class="container">
@@ -312,7 +358,11 @@
         </div>
     </div>
 
-    <!-- 외부 스크립트 호출을 모두 제거하고 모든 로직을 단일 스크립트 블록으로 통합 -->
+    <!-- 외부 스크립트 호출을 다시 추가합니다. -->
+    <script src="js/data.js" defer></script>
+    <script src="js/layout.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/payment.js" defer></script>
     
     <script>
         // ==========================================================
@@ -328,13 +378,12 @@
         // --- 1-1. 2D 맵 이미지 경로 ---
         const IMAGE_FRONT = "images/body_front.png"; // 전면 이미지 경로
         const IMAGE_BACK = "images/body_back.png";   // 후면 이미지 경로
-
+        
         const PLACEHOLDER_FRONT = "https://placehold.co/400x700/f5d9c7/333333?text=인체+가이드\\n(전면)";
         const PLACEHOLDER_BACK = "https://placehold.co/400x700/f5d9c7/333333?text=인체+가이드\\n(후면)";
         let currentSelectedPart = null;
 
         // --- 1-2. 로컬 비디오 경로 ---
-        // 모든 운동에 대해 가상의 경로를 정의합니다.
         const videoUrls = {
             // 운동 기구 영상 (Section 1에서 사용)
             'latpulldown': 'videos/latpulldown.mp4', 
@@ -477,7 +526,7 @@
                 // 후면에서는 팔 숨김 (등에 집중)
                 
                 btnFront.style.backgroundColor = '#ccc';
-                btnFront.style.color = '#333';
+                btnFront.style.color = 'white';
                 btnBack.style.backgroundColor = '#007bff';
                 btnBack.style.color = 'white';
             }
