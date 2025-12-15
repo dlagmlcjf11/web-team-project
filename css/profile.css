@@ -166,3 +166,148 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
+
+/* --- Styles for Streak Tracker --- */
+.streak-tracker {
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-m);
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+}
+
+.streak-tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.streak-tracker-header h3 {
+    color: var(--color-primary);
+    font-size: 1.6rem;
+    margin: 0;
+}
+
+#check-in-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+#check-in-btn:disabled {
+    background-color: var(--color-text-light);
+    cursor: not-allowed;
+    border-color: transparent;
+}
+
+.streak-info {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.streak-info p {
+    font-size: 1.1rem;
+    color: var(--color-text);
+}
+
+.streak-info .streak-count {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.streak-calendar-container {
+    text-align: center;
+}
+
+.streak-calendar-header {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.streak-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.calendar-day {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border-radius-s);
+    background-color: var(--color-background);
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+}
+
+.calendar-day.day-header {
+    font-weight: bold;
+    background-color: transparent;
+    color: var(--color-text);
+}
+
+.calendar-day.checked-in {
+    background-color: #a5d6a7; /* A pleasant green */
+    color: var(--color-surface);
+    font-weight: bold;
+}
+
+.calendar-day.today {
+    border: 2px solid var(--color-primary);
+}
+
+/* --- Styles for Collapsible Streak Tracker --- */
+.streak-tracker-header {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.streak-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.toggle-indicator {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    transition: transform 0.3s ease;
+}
+
+.streak-tracker-body {
+    max-height: 500px; /* Adjust as needed, should be larger than the content */
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out, margin 0.4s ease-in-out;
+}
+
+.streak-tracker.collapsed .streak-tracker-body {
+    max-height: 0;
+    margin-top: -20px; /* To reduce space when collapsed */
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Styles for show/hide password feature */
+.locker-password-display {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between password text and icon */
+}
+
+.password-toggle-icon {
+    width: 20px; /* Size of the eye icon */
+    height: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.password-toggle-icon:hover {
+    opacity: 1;
+}

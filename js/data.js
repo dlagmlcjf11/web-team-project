@@ -4,21 +4,36 @@ const users = [
         pw: 'pass1', 
         name: '김코딩', 
         expiresAt: '2025-01-20', 
-        locker: { number: 'A-15', password: '1234' }
+        locker: null,
+        checkIns: ['2025-12-02', '2025-12-03', '2025-12-04', '2025-12-05', '2025-12-06', '2025-12-07', '2025-12-08', '2025-12-09', '2025-12-10', '2025-12-11', '2025-12-12', '2025-12-13', '2025-12-14'],
+        hasReceivedStreakCoupon: false
     },
     { 
         id: 'user2', 
         pw: 'pass2', 
         name: '박개발', 
         expiresAt: '2024-12-19', 
-        locker: null
+        locker: null,
+        checkIns: [],
+        hasReceivedStreakCoupon: false
+    },
+    {
+        id: 'user3', 
+        pw: 'pass3', 
+        name: '임언어', 
+        expiresAt: '2025-12-19', 
+        locker: null,
+        checkIns: [],
+        hasReceivedStreakCoupon: false
     },
     { 
         id: 'admin', 
         pw: 'admin', 
         name: '관리자', 
         expiresAt: '2026-12-31', 
-        locker: { number: 'C-01', password: '9999' }
+        locker: { number: 'B-04', password: '9999' },
+        checkIns: ['2025-12-05', '2025-12-07', '2025-12-09', '2025-12-11', '2025-12-13', '2025-12-14'],
+        hasReceivedStreakCoupon: false
     }
 ];
 
@@ -92,3 +107,56 @@ const announcements = [
         type: 'notice'
     }
 ];
+
+const couponData = {
+    "XMAS2025": 0.20,
+    "STREAK14": 0.05
+};
+
+// --- Locker Data Persistence ---
+const LOCKER_DATA_KEY = 'gymLockerData';
+const CURRENT_LOCKER_DATA_VERSION = 2;
+
+// We wrap the initial data in a function to avoid polluting the global scope
+function getInitialLockerData() {
+    return {
+        version: CURRENT_LOCKER_DATA_VERSION,
+        lockers: [
+            { number: 'A-01', isAvailable: true },
+            { number: 'A-02', isAvailable: false },
+            { number: 'A-03', isAvailable: true },
+            { number: 'A-04', isAvailable: true },
+            { number: 'B-01', isAvailable: true },
+            { number: 'B-02', isAvailable: true },
+            { number: 'B-03', isAvailable: true },
+            { number: 'B-04', isAvailable: false },
+            { number: 'C-01', isAvailable: true },
+            { number: 'C-02', isAvailable: true },
+            { number: 'C-03', isAvailable: true },
+            { number: 'C-04', isAvailable: false },
+        ]
+    };
+}
+
+// Immediately-invoked function to initialize or migrate locker data in localStorage
+(function() {
+    const storedDataString = localStorage.getItem(LOCKER_DATA_KEY);
+
+    if (!storedDataString) {
+        // If no data exists, initialize it
+        localStorage.setItem(LOCKER_DATA_KEY, JSON.stringify(getInitialLockerData()));
+    } else {
+        try {
+            const storedData = JSON.parse(storedDataString);
+            // Check if the stored data has a version number and if it's outdated
+            if (!storedData.version || storedData.version < CURRENT_LOCKER_DATA_VERSION) {
+                // If outdated or versionless, overwrite with new data
+                localStorage.setItem(LOCKER_DATA_KEY, JSON.stringify(getInitialLockerData()));
+            }
+        } catch (e) {
+            // If parsing fails, overwrite with fresh data
+            console.error("Failed to parse locker data, re-initializing.", e);
+            localStorage.setItem(LOCKER_DATA_KEY, JSON.stringify(getInitialLockerData()));
+        }
+    }
+})();

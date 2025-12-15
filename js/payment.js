@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const basePricePerMonth = 10000;
     const discountPerBundle = 1000;
     const bundleSize = 3;
-    const couponCodeValid = "KGYM20";
-    const couponDiscountPercentage = 0.20;
 
     // --- State ---
     let currentTotalPrice = 0;
@@ -36,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- 2. Calculate Price and Apply Discounts ---
     function calculatePrice() {
+        paymentErrorMessageDiv.style.display = 'none'; // Hide error on recalculation
         let currentMonths = 0;
         if (monthsSelect.value === 'other') {
             currentMonths = parseInt(otherMonthsInput.value) || 0;
@@ -64,11 +63,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Coupon Discount
         isCouponApplied = false;
-        if (paymentMethodSelect.value === 'coupon' && couponCodeInput.value.toUpperCase() === couponCodeValid) {
-            const couponDiscountAmount = calculatedPrice * couponDiscountPercentage;
-            calculatedPrice -= couponDiscountAmount;
-            discountDetails += (discountDetails === "적용된 할인 없음" ? "" : ", ") + `쿠폰 할인 20% (${couponDiscountAmount.toLocaleString()}원) 적용`;
-            isCouponApplied = true;
+        const enteredCouponCode = couponCodeInput.value.toUpperCase();
+        if (enteredCouponCode) { // Only check if there is a coupon code entered
+            // Check if couponData exists and the entered coupon code is valid
+            if (typeof couponData !== 'undefined' && couponData[enteredCouponCode]) {
+                const couponDiscountPercentage = couponData[enteredCouponCode];
+                const couponDiscountAmount = calculatedPrice * couponDiscountPercentage;
+                calculatedPrice -= couponDiscountAmount;
+
+                const couponDetails = `쿠폰 할인 ${couponDiscountPercentage * 100}% (${couponDiscountAmount.toLocaleString()}원) 적용`;
+                if (discountDetails === "적용된 할인 없음") {
+                    discountDetails = couponDetails;
+                } else {
+                    discountDetails += `, ${couponDetails}`;
+                }
+                isCouponApplied = true;
+            } else {
+                // This path is taken if the coupon is entered but invalid.
+                // We don't set isCouponApplied to true.
+            }
         }
 
         currentTotalPrice = calculatedPrice;
@@ -88,15 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     otherMonthsInput.addEventListener('input', calculatePrice);
-    paymentMethodSelect.addEventListener('change', function() {
-        if (this.value === 'coupon') {
-            couponInputGroup.style.display = 'block';
-        } else {
-            couponInputGroup.style.display = 'none';
-            couponCodeInput.value = '';
-        }
-        calculatePrice();
-    });
     couponCodeInput.addEventListener('input', calculatePrice);
 
     paymentForm.addEventListener('submit', function(event) {
@@ -110,8 +114,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        if (paymentMethodSelect.value === 'coupon' && !isCouponApplied) {
-            paymentErrorMessageDiv.textContent = '유효한 쿠폰 코드를 입력해주세요.';
+        // Validate that if a coupon is typed, it must be valid
+        if (couponCodeInput.value && !isCouponApplied) {
+            paymentErrorMessageDiv.textContent = '입력된 쿠폰 코드가 유효하지 않습니다.';
             paymentErrorMessageDiv.style.display = 'block';
             return;
         }
