@@ -1,11 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>헬스장 소개</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
+
     <div class="main-container">
-        
+        <div class="container">
+            
+            <!-- 1. 센터 정보 섹션 (위치, 운영시간, 연락처) -->
+            <section class="section">
+                <h2 class="section-title">센터 안내</h2>
+                <!-- 운영 정보 카드 -->
+                <div class="card">
+                    <h3>🕒 운영 정보</h3>
+                    <ul style="list-style: none; padding-left: 0; line-height: 1.8;">
+                        <li><strong>평일:</strong> 13:00 - 20:00</li>
+                        <li><strong>주말:</strong> 휴무 </li>
+                        <!-- 휴무일 텍스트를 달력으로 대체 -->
+                        <li><strong>연락처:</strong> 010-5051-2536</li>
+                    </ul>
+
+                    <!-- 휴무일 달력 컨테이너 -->
+                    <h3 style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">🗓️ 휴무일 달력</h3>
+                    <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">*주말 및 공휴일 휴무</p>
+                    <div id="holiday-calendar-container" style="max-width: 350px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; font-size: 14px; margin: 0 auto;">
+                        <!-- Calendar will be injected here -->
+                    </div>
+                </div>
+
+                <!-- 위치 및 지도 카드 -->
+                <div class="card">
+                    <h3>📍 오시는 길 </h3>
+                    <!-- 상명대 천안캠퍼스 스포츠센터 주소 -->
+                    <p style="margin-bottom: 10px;">충청남도 천안시 동남구 상명대길 31 (상명대학교 천안캠퍼스 스포츠센터)</p>
+                    
+                    <!-- 지도가 렌더링될 영역: Google Maps iframe 사용 -->
+                    <div id="map" style="width: 100%; height: 350px; border-radius: 8px; overflow: hidden;">
+                        <!-- 좌표에 마커를 강제 표시 -->
+                        <iframe 
+                            src="https://maps.google.com/maps?q=상명대학교 천안캠퍼스 스포츠센터&center=36.83233320907383,127.18019068551466&z=16&output=embed&hl=ko&markers=36.83233320907383,127.18019068551466"
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. 트레이너 소개 섹션 -->
+            <section class="section">
+                <h2 class="section-title">트레이너 소개</h2>
+                
+                <!-- 트레이너 1 (김민기 트레이너) -->
+                <div class="card">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 80px; height: 80px; background-color: #ddd; border-radius: 50%; overflow: hidden;">
+                             <!-- 이미지 경로 수정 -->
+                            <img src="images/trainerminky.png" alt="김민기 트레이너 사진" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div>
+                            <h3 style="margin: 0 0 5px 0;">김민기 트레이너</h3>
+                            <p style="font-size: 0.9em; color: #666; margin: 0;">전문 분야: 벌크업, 바디프로필, 근력강화</p>
+                        </div>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+                    <p>
+                        "몸이 커지고 싶다고요?! 진정한 남자가 되고싶다고요?! 고민하지 마세요! 당신은 혼자가 아닙니다!"
+                    </p>
+                </div>
+
+                <!-- 트레이너 2 (임희철 트레이너) -->
+                <div class="card">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 80px; height: 80px; background-color: #ddd; border-radius: 50%; overflow: hidden;">
+                            <img src="images/trainerCchul.png" alt="임희철 트레이너 사진" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div>
+                            <h3 style="margin: 0 0 5px 0;">임희철 트레이너</h3>
+                            <p style="font-size: 0.9em; color: #666; margin: 0;">전문 분야: 다이어트, 체형 교정, 재활</p>
+                        </div>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+                    <p>
+                        "몸이 너무 크다고요?! 체지방이 너무 많다고요?! 걱정하지 마세요! 당신의 건강한 변화를 도와드리겠습니다!"
+                    </p>
+                </div>
+
+            </section>
+        </div>
     </div>
+
+    <script src="js/layout.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/payment.js"></script>
+    
+    <script>
+        // 헬스장 휴무일 달력 기능
+        
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        const container = document.getElementById('holiday-calendar-container');
+
+        // 2025년 및 2026년 한국 공휴일 데이터 (YYYY-MM-DD 형식) - 넷째 주 일요일 외의 고정/대체 공휴일만 포함
+        const holidays = [
+            // 2025년 공휴일
+            "2025-01-01", // 신정
+            "2025-01-28", // 설날 (대체공휴일)
+            "2025-01-29", // 설날
+            "2025-01-30", // 설날
+            "2025-03-01", // 삼일절
+            "2025-05-05", // 어린이날
+            "2025-05-06", // 어린이날 대체공휴일
+            "2025-05-18", // 부처님 오신 날 (일요일)
+            "2025-06-06", // 현충일
+            "2025-08-15", // 광복절
+            "2025-10-03", // 개천절
+            "2025-10-06", // 추석 (월요일)
+            "2025-10-07", // 추석 (화요일)
+            "2025-10-08", // 추석 (수요일)
+            "2025-10-09", // 한글날
+            "2025-12-25", // 성탄절
+
+            // 2026년 공휴일 (임시 데이터 - 실제 날짜와 다를 수 있으나 패턴에 맞게 입력)
+            "2026-01-01", // 신정
+            "2026-02-17", // 설날 (화)
+            "2026-02-18", // 설날 (수)
+            "2026-02-19", // 설날 (목)
+            "2026-03-01", // 삼일절 (일)
+            "2026-03-02", // 삼일절 대체공휴일 (월)
+            "2026-05-05", // 어린이날
+            "2026-05-25", // 부처님 오신 날
+            "2026-06-06", // 현충일
+            "2026-08-15", // 광복절
+            "2026-10-03", // 개천절
+            "2026-09-25", // 추석 (금)
+            "2026-09-26", // 추석 (토)
+            "2026-09-27", // 추석 (일)
+            "2026-09-28", // 추석 대체공휴일 (월)
+            "2026-10-09", // 한글날
+            "2026-12-25"  // 성탄절
+        ];
+
+        // 넷째 주 일요일인지 확인하는 함수
+        function isFourthSunday(date) {
+            if (date.getDay() !== 0) return false;
+            const dayOfMonth = date.getDate();
+            // 4번째 일요일은 22일 ~ 28일 사이에 위치
+            return dayOfMonth >= 22 && dayOfMonth <= 28;
+        }
+
+        // 공휴일인지 확인하는 함수
+        function isPublicHoliday(date) {
+            const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            return holidays.includes(dateString);
+        }
+
+        // 달력 생성 및 렌더링 함수
+        function renderCalendar(month, year) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDayOfWeek = firstDay.getDay();
+
+            let calendarHtml = `
+                <div style="background-color: #f7f7f7; padding: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd;">
+                    <button onclick="navigateMonth(-1)" style="background: none; border: none; cursor: pointer; font-weight: bold; padding: 5px;">&lt;</button>
+                    <span style="font-weight: bold; font-size: 1.1em;">${year}년 ${month + 1}월</span>
+                    <button onclick="navigateMonth(1)" style="background: none; border: none; cursor: pointer; font-weight: bold; padding: 5px;">&gt;</button>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; background-color: #fff;">
+                    <div style="color: red; padding: 8px 0;">일</div>
+                    <div style="color: #333; padding: 8px 0;">월</div>
+                    <div style="color: #333; padding: 8px 0;">화</div>
+                    <div style="color: #333; padding: 8px 0;">수</div>
+                    <div style="color: #333; padding: 8px 0;">목</div>
+                    <div style="color: #333; padding: 8px 0;">금</div>
+                    <div style="color: blue; padding: 8px 0;">토</div>
+            `;
+
+            // 이전 달 빈 칸 채우기
+            for (let i = 0; i < startDayOfWeek; i++) {
+                calendarHtml += `<div style="padding: 8px 0; color: #ccc;"></div>`;
+            }
+
+            // 날짜 채우기
+            for (let day = 1; day <= daysInMonth; day++) {
+                const currentDate = new Date(year, month, day);
+                const dayOfWeek = currentDate.getDay();
+                
+                let dayStyle = "padding: 8px 0;";
+                let textColor = "#333";
+
+                // 일요일 색상
+                if (dayOfWeek === 0) textColor = "red";
+                // 토요일 색상
+                if (dayOfWeek === 6) textColor = "blue";
+
+                // 휴무일 로직 적용 (넷째 주 일요일 & 공휴일)
+                // 2025년 이후의 데이터가 있으므로 해당 연도에만 적용
+                if (currentYear >= 2025) { 
+                    if (isFourthSunday(currentDate) || isPublicHoliday(currentDate)) {
+                        textColor = "white";
+                        dayStyle += " background-color: #d9534f; font-weight: bold; border-radius: 4px; margin: 2px;"; // 휴무일 강조
+                    }
+                } else {
+                    // 2025년 이전 연도는 넷째 주 일요일만 휴무로 표시 (공휴일 데이터가 없으므로)
+                     if (isFourthSunday(currentDate)) {
+                        textColor = "white";
+                        dayStyle += " background-color: #d9534f; font-weight: bold; border-radius: 4px; margin: 2px;";
+                    }
+                }
+                
+
+                // 오늘 날짜 표시
+                const today = new Date();
+                if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                    dayStyle += " border: 2px solid #3b82f6; border-radius: 4px; "; // 오늘 날짜 테두리
+                    if (textColor !== "white" && textColor !== "red") textColor = "#3b82f6";
+                }
+
+                calendarHtml += `<div style="${dayStyle} color: ${textColor};">${day}</div>`;
+            }
+
+            calendarHtml += `</div>`;
+            container.innerHTML = calendarHtml;
+        }
+
+        // 월 이동 함수
+        window.navigateMonth = function(offset) {
+            currentMonth += offset;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentMonth, currentYear);
+        }
+
+        // 페이지 로드 시 달력 초기화
+        window.addEventListener('load', function() {
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        // 기존 코드 유지
+        // 자바스크립트 지도 코드는 더 이상 필요하지 않습니다.
+        window.onload = function() {
+            console.log("페이지 로드 완료. Google 지도가 iframe으로 로드됩니다.");
+            renderCalendar(currentMonth, currentYear); // 달력 초기화도 onload에 포함
+        };
+    </script>
+</body>
 </html>

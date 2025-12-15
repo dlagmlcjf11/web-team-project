@@ -3,25 +3,581 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>운동 안내 - K-GYM</title>
+    <title>통합 운동 가이드 - K-GYM</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 기본 레이아웃 스타일 재정의 */
+        .main-container {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* --- 상단 헤더 스타일 추가 --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            background-color: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .header .nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .header .nav a:hover {
+            color: #007bff;
+        }
+        .header .profile-icon {
+            font-size: 1.5em;
+            color: #555;
+            cursor: pointer;
+        }
+        /* --- 헤더 스타일 끝 --- */
+        
+        /* --- 1. 운동 기구 가이드 스타일 --- */
+        .equipment-card {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .equipment-card h3 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+        .equipment-image {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            cursor: pointer; /* 클릭 가능하도록 커서 변경 */
+            position: relative;
+        }
+        .equipment-image::after {
+            content: "▶";
+            position: absolute;
+            font-size: 50px;
+            color: white;
+            opacity: 0.8;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        .equipment-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .equipment-detail {
+            text-align: left;
+            width: 100%;
+        }
+        .equipment-detail strong {
+            color: #007bff;
+        }
+        
+        /* 동영상 모달 스타일 */
+        #video-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        #video-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; 
+            height: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        #close-btn {
+            color: white;
+            float: right;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 30px;
+            z-index: 1001;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        #close-btn:hover {
+            opacity: 1;
+        }
+
+        /* --- 2. 2D 이미지 맵 스타일 --- */
+        
+        /* 새로운 래퍼: 이미지와 정보 패널을 나란히 배치 */
+        .interactive-guide-wrapper {
+            display: flex;
+            flex-direction: column; /* 모바일 우선: 세로 스택 */
+            gap: 30px;
+            align-items: center;
+            margin: 20px auto;
+            max-width: 850px;
+        }
+
+        /* 768px 이상일 때 가로 배치 */
+        @media (min-width: 768px) {
+            .interactive-guide-wrapper {
+                flex-direction: row; /* 가로 배치 */
+                align-items: flex-start;
+            }
+        }
+
+        .body-map-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* 이미지 크기 고정 */
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .body-map-wrapper img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .muscle-area {
+            position: absolute;
+            /* 배경색과 투명도를 완전히 제거 */
+            background-color: transparent; 
+            cursor: pointer;
+            border-radius: 5px;
+            opacity: 0; 
+            transition: opacity 0.2s, background-color 0.2s;
+        }
+        /* 클릭/호버 시에도 아무런 시각적 변화 없음 */
+        .muscle-area:hover, .muscle-area.active {
+            opacity: 0;
+            background-color: transparent;
+        }
+        /* 기존 부위 */
+        /* 이미지에 맞춰 클릭 영역 좌표 조정 */
+        #area-chest { top: 20%; left: 35%; width: 30%; height: 18%; } /* 가슴/어깨 상단 */
+        #area-quads { top: 50%; left: 30%; width: 40%; height: 35%; } /* 허벅지 */
+        #area-back { top: 15%; left: 30%; width: 40%; height: 35%; } /* 등 상부 및 광배근 */ 
+        /* 팔 부위 추가 (좌우) */
+        #area-arms-left { top: 20%; left: 15%; width: 15%; height: 35%; } /* 좌측 팔 */
+        #area-arms-right { top: 20%; left: 70%; width: 15%; height: 35%; } /* 우측 팔 */
+
+        #info-panel {
+            text-align: left; /* 오른쪽 패널의 텍스트를 왼쪽 정렬로 변경 */
+            padding: 15px;
+            margin-top: 0; /* 상단 여백 제거 (가로 배치 시) */
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            flex-grow: 1; /* 남은 공간 차지 */
+            width: 100%; /* 모바일에서 전체 너비 사용 */
+        }
+        #selected-part {
+            font-weight: bold;
+            color: #d9534f;
+            font-size: 1.1em;
+        }
+        #exercise-list {
+            text-align: left;
+            max-width: 400px;
+            margin: 15px 0 0 0; /* margin 조정 */
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        #exercise-list ul {
+            list-style: disc;
+            padding-left: 20px;
+        }
+    </style>
 </head>
 <body>
+    <!-- 상단 헤더 마크업 추가 -->
+    <header class="header">
+        <div class="logo">K-GYM</div>
+        <nav class="nav">
+            <a href="intro.html">헬스장 소개</a>
+            <a href="announcements.html">공지</a>
+            <a href="guide.html">운동 안내</a>
+            <a href="#">고객센터</a>
+        </nav>
+        <!-- Font Awesome 아이콘을 사용할 수 없으므로, 기본 문자 아이콘을 사용 -->
+        <a href="profile.html" class="profile-icon">👤</a> 
+    </header>
+    <!-- 헤더 마크업 끝 -->
 
     <div class="main-container">
         <div class="container">
+            
+            <!-- ====================================================== -->
+            <!-- SECTION 1: 운동 기구 가이드 (Local Video 기능) -->
+            <!-- ====================================================== -->
             <section class="section">
-                <h2 class="section-title">운동 안내</h2>
-                <div class="card">
-                    <p>운동 기구 및 사용법 안내가 여기에 표시됩니다.</p>
+                <h2 class="section-title">운동 기구 사용 가이드 (영상)</h2>
+                
+                <!-- 1. 랫풀다운 (Lat Pulldown) -->
+                <div class="card equipment-card">
+                    <h3>1. 랫풀다운 (Lat Pulldown)</h3>
+                    <div class="equipment-image" onclick="showVideo('latpulldown')">
+                        <img src="images/latpulldown.jpg" alt="랫풀다운 기구 이미지" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/300x200/cccccc/333333?text=랫풀다운+이미지+준비중';"/>
+                    </div>
+                    <div class="equipment-detail">
+                        <p><strong>주요 운동 부위:</strong> 등 근육 (광배근), 이두근</p>
+                        <p><strong>설명:</strong> 등 상부와 측면 근육을 넓고 두껍게 만드는 데 효과적인 운동입니다.</p>
+                    </div>
+                </div>
+
+                <!-- 2. 펙덱플라이 (Pec Deck Fly) -->
+                <div class="card equipment-card">
+                    <h3>2. 펙덱플라이 (Pec Deck Fly)</h3>
+                    <div class="equipment-image" onclick="showVideo('pecdeckfly')">
+                        <img src="images/pecdeckfly.jpg" alt="펙덱플라이 기구 이미지" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/300x200/cccccc/333333?text=펙덱플라이+이미지+준비중';"/>
+                    </div>
+                    <div class="equipment-detail">
+                        <p><strong>주요 운동 부위:</strong> 가슴 근육 (대흉근 중앙)</p>
+                        <p><strong>설명:</strong> 가슴 근육의 중앙 부분을 집중적으로 고립시켜 운동하는 데 사용됩니다.</p>
+                    </div>
+                </div>
+
+                <!-- 3. 레그 익스텐션 (Leg Extension) -->
+                <div class="card equipment-card">
+                    <h3>3. 레그 익스텐션 (Leg Extension)</h3>
+                    <div class="equipment-image" onclick="showVideo('legextension')">
+                        <img src="images/legextension.jpg" alt="레그 익스텐션 기구 이미지" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/300x200/cccccc/333333?text=레그익스텐션+이미지+준비중';"/>
+                    </div>
+                    <div class="equipment-detail">
+                        <p><strong>주요 운동 부위:</strong> 허벅지 앞쪽 (대퇴사두근)</p>
+                        <p><strong>설명:</strong> 허벅지 앞쪽 근육인 대퇴사두근을 발달시키는 데 최적화된 기구입니다.</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ====================================================== -->
+            <!-- SECTION 2: 2D 인체 운동 부위 가이드 (이미지 맵) -->
+            <!-- ====================================================== -->
+            <section class="section" style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 30px;">
+                <h2 class="section-title">2D 운동 부위 선택 가이드 (클릭)</h2>
+                
+                <!-- 전면/후면 전환 버튼 (가운데 정렬) -->
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <button onclick="toggleView('front')" id="btn-front" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">전면 (가슴/팔/하체)</button>
+                    <button onclick="toggleView('back')" id="btn-back" style="padding: 8px 15px; background-color: #ccc; color: #333; border: none; border-radius: 4px; cursor: pointer;">후면 (등/하체)</button>
+                </div>
+
+                <!-- 이미지 맵과 정보 패널을 묶는 새로운 래퍼 -->
+                <div class="interactive-guide-wrapper">
+                    <!-- 2D 이미지 맵 영역 -->
+                    <div class="body-map-wrapper">
+                        <!-- 
+                            이미지 경로 수정: 제공된 해부학 이미지 경로를 사용합니다. 
+                            전면: image_ba6941.png (뼈대와 근육)
+                            후면: image_ba693d.png (근육)
+                        -->
+                        <img id="body-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="인체 근육 가이드 이미지">
+                        
+                        <!-- 클릭 가능한 영역 오버레이 -->
+                        <div id="area-chest" class="muscle-area" data-part="CHEST" onclick="selectPart('CHEST')"></div>
+                        <div id="area-quads" class="muscle-area" data-part="QUADS" onclick="selectPart('QUADS')"></div>
+                        <div id="area-back" class="muscle-area" data-part="BACK" onclick="selectPart('BACK')" style="display: none;"></div>
+                        <!-- 팔 부위 추가 -->
+                        <div id="area-arms-left" class="muscle-area" data-part="ARMS" onclick="selectPart('ARMS')"></div>
+                        <div id="area-arms-right" class="muscle-area" data-part="ARMS" onclick="selectPart('ARMS')"></div>
+                    </div>
+
+                    <!-- 정보 패널 -->
+                    <div id="info-panel">
+                        <p>이미지의 부위를 클릭하여 추천 운동을 확인하세요.</p>
+                        <p>선택된 부위: <span id="selected-part">없음</span></p>
+                        <div id="exercise-list">
+                            <!-- 운동 목록이 여기에 삽입됩니다. -->
+                        </div>
+                    </div>
                 </div>
             </section>
+
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+    <!-- 동영상 모달 구조 (로컬 비디오 재생용) -->
+    <div id="video-modal">
+        <span id="close-btn" onclick="closeVideoModal()">&times;</span>
+        <div id="video-modal-content">
+            <!-- Content will be injected by JS -->
+        </div>
+    </div>
+
+    <!-- 외부 스크립트 호출을 다시 추가합니다. -->
+>>>>>>> origin/workout
     <script src="js/data.js" defer></script>
     <script src="js/layout.js" defer></script>
     <script src="js/main.js" defer></script>
     <script src="js/payment.js" defer></script>
+<<<<<<< HEAD
+=======
+    
+    <script>
+        // ==========================================================
+        // 1. 공통 데이터
+        // ==========================================================
+        const exerciseData = {
+            'CHEST': ['펙 덱 플라이', '벤치 프레스', '덤벨 프레스'],
+            'BACK': ['랫 풀 다운', '바벨 로우', '데드 리프트'],
+            'QUADS': ['레그 익스텐션', '스쿼트', '레그 프레스'],
+            'ARMS': ['덤벨 컬 (이두)', '트라이셉스 익스텐션 (삼두)'] // 팔 운동 추가
+        };
+        
+        // --- 1-1. 2D 맵 이미지 경로 ---
+        const IMAGE_FRONT = "images/body_front.png"; // 전면 이미지 경로
+        const IMAGE_BACK = "images/body_back.png";   // 후면 이미지 경로
+        
+        const PLACEHOLDER_FRONT = "https://placehold.co/400x700/f5d9c7/333333?text=인체+가이드\\n(전면)";
+        const PLACEHOLDER_BACK = "https://placehold.co/400x700/f5d9c7/333333?text=인체+가이드\\n(후면)";
+        let currentSelectedPart = null;
+
+        // --- 1-2. 로컬 비디오 경로 ---
+        const videoUrls = {
+            // 운동 기구 영상 (Section 1에서 사용)
+            'latpulldown': 'videos/latpulldown.mp4', 
+            'pecdeckfly': 'videos/pecdeckfly.mp4',
+            'legextension': 'videos/legextension.mp4',
+            // 개별 운동 영상 (Section 2에서 사용)
+            // 모든 추천 운동에 대해 가상의 경로를 정의하여 버튼 표시를 강제합니다.
+            '펙 덱 플라이': 'videos/pecdeckfly.mp4',
+            '벤치 프레스': 'videos/bench_press.mp4',
+            '덤벨 프레스': 'videos/dumbbell_press.mp4',
+            '랫 풀 다운': 'videos/latpulldown.mp4',
+            '바벨 로우': 'videos/barbell_row.mp4',
+            '데드 리프트': 'videos/deadlift.mp4',
+            '레그 익스텐션': 'videos/legextension.mp4',
+            '스쿼트': 'videos/squat.mp4',
+            '레그 프레스': 'videos/leg_press.mp4',
+            '덤벨 컬 (이두)': 'videos/dumbbell_curl.mp4',
+            '트라이셉스 익스텐션 (삼두)': 'videos/triceps_extension.mp4'
+        };
+        let currentVideoElement = null;
+        
+        // ==========================================================
+        // 2. 비디오 재생 로직 (로컬 파일)
+        // ==========================================================
+        window.showVideo = function(key) {
+            const videoPath = videoUrls[key];
+            
+            if (!videoPath) {
+                 alert("선택하신 운동의 영상은 아직 준비 중입니다.");
+                 return;
+            }
+
+            const modal = document.getElementById('video-modal');
+            const content = document.getElementById('video-modal-content');
+            
+            // 모달에 `<video>` 태그 주입
+            content.innerHTML = `
+                <div class="video-wrapper">
+                    <video id="local-video-player" controls autoplay playsinline muted loop>
+                        <source src="${videoPath}" type="video/mp4">
+                        <p style="color: white; padding: 20px; text-align: center;">비디오 파일을 로드할 수 없습니다. (경로: ${videoPath})</p>
+                    </video>
+                </div>
+            `;
+            
+            currentVideoElement = document.getElementById('local-video-player');
+
+            if (currentVideoElement) {
+                currentVideoElement.play().catch(error => {
+                    console.warn("비디오 자동 재생 실패:", error);
+                    const fallbackMessage = content.querySelector('p');
+                    if (fallbackMessage) {
+                        fallbackMessage.textContent = `[경로: ${videoPath}] 파일을 찾을 수 없거나 자동 재생이 차단되었습니다. 재생 버튼을 눌러주세요.`;
+                    }
+                });
+            }
+
+            modal.style.display = 'flex';
+        };
+
+        window.closeVideoModal = function() {
+            if (currentVideoElement) {
+                currentVideoElement.pause();
+                currentVideoElement = null;
+            }
+            document.getElementById('video-modal').style.display = 'none';
+            document.getElementById('video-modal-content').innerHTML = '';
+        };
+
+        // 모달 영역 외 클릭 시 닫기
+        document.getElementById('video-modal').addEventListener('click', function(event) {
+            if (event.target === this || event.target.closest('#close-btn')) {
+                closeVideoModal();
+            }
+        });
+
+
+        // ==========================================================
+        // 3. 2D 이미지 맵 로직
+        // ==========================================================
+        
+        // 부위 선택 및 목록 표시
+        window.selectPart = function(partName) {
+            // 모든 .muscle-area에서 active 클래스 제거
+            document.querySelectorAll('.muscle-area').forEach(area => area.classList.remove('active'));
+            
+            if (partName) {
+                // 선택된 부위의 모든 요소 활성화 (팔은 좌우가 동일한 ARMS 부위)
+                document.querySelectorAll(`[data-part="${partName}"]`).forEach(selectedArea => {
+                    selectedArea.classList.add('active');
+                });
+
+                currentSelectedPart = partName;
+                document.getElementById('selected-part').textContent = partName;
+                displayExercises(partName);
+            } else {
+                currentSelectedPart = null;
+                document.getElementById('selected-part').textContent = '없음';
+                displayExercises(null);
+            }
+        };
+        
+        // 전면/후면 전환 기능
+        window.toggleView = function(view) {
+            const imageEl = document.getElementById('body-image');
+            const btnFront = document.getElementById('btn-front');
+            const btnBack = document.getElementById('btn-back');
+            
+            const areas = {
+                chest: document.getElementById('area-chest'),
+                quads: document.getElementById('area-quads'),
+                back: document.getElementById('area-back'),
+                armsLeft: document.getElementById('area-arms-left'),
+                armsRight: document.getElementById('area-arms-right')
+            };
+            
+            // 모든 영역 일단 숨김 처리
+            document.querySelectorAll('.muscle-area').forEach(area => area.style.display = 'none');
+            
+            if (view === 'front') {
+                imageEl.onerror = () => imageEl.src = PLACEHOLDER_FRONT;
+                imageEl.src = IMAGE_FRONT; 
+                
+                areas.chest.style.display = 'block';
+                areas.quads.style.display = 'block';
+                areas.armsLeft.style.display = 'block'; // 팔 표시
+                areas.armsRight.style.display = 'block'; // 팔 표시
+                
+                btnFront.style.backgroundColor = '#007bff';
+                btnFront.style.color = 'white';
+                btnBack.style.backgroundColor = '#ccc';
+                btnBack.style.color = '#333';
+                
+            } else if (view === 'back') {
+                imageEl.onerror = () => imageEl.src = PLACEHOLDER_BACK;
+                imageEl.src = IMAGE_BACK; 
+                
+                areas.back.style.display = 'block';
+                areas.quads.style.display = 'block';
+                // 후면에서는 팔 숨김 (등에 집중)
+                
+                btnFront.style.backgroundColor = '#ccc';
+                btnFront.style.color = 'white';
+                btnBack.style.backgroundColor = '#007bff';
+                btnBack.style.color = 'white';
+            }
+            
+            selectPart(null); 
+        }
+
+        // 운동 목록 표시 함수 (영상보기 버튼 추가)
+        function displayExercises(partName) {
+            const listContainer = document.getElementById('exercise-list');
+            listContainer.innerHTML = '';
+
+            if (partName && exerciseData[partName]) {
+                const exercises = exerciseData[partName];
+                let html = '<h4 style="margin-bottom: 5px; font-weight: bold;">[ ' + partName + ' ] 추천 운동 목록</h4><ul>';
+                exercises.forEach(exercise => {
+                    const videoKey = exercise; 
+                    
+                    let videoButton = '';
+                    // 디버깅: 버튼 생성 조건 확인 (Console 탭 확인 필요)
+                    if (videoUrls[videoKey]) {
+                        console.log(`[Button Check] 버튼 생성 성공: ${videoKey}`);
+                        videoButton = `<button onclick="showVideo('${videoKey}')" 
+                                           style="margin-left: 10px; padding: 4px 8px; font-size: 0.8em; background-color: #d9534f; color: white; border: none; border-radius: 3px; cursor: pointer;">
+                                           영상보기
+                                       </button>`;
+                    } else {
+                        console.log(`[Button Check] 버튼 생성 실패 (URL 정의 없음): ${videoKey}`);
+                    }
+
+                    html += `<li style="margin-left: 20px; display: flex; align-items: center; justify-content: space-between;">
+                                <span>${exercise}</span>
+                                ${videoButton}
+                             </li>`;
+                });
+                html += '</ul>';
+                listContainer.innerHTML = html;
+            }
+        }
+        
+        // 페이지 로드 시 초기화 (전면 뷰 기본값)
+        window.addEventListener('load', () => {
+            toggleView('front');
+        });
+
+    </script>
+>>>>>>> origin/workout
 </body>
 </html>
