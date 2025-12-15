@@ -3,9 +3,9 @@ const users = [
         id: 'user1', 
         pw: 'pass1', 
         name: '김코딩', 
-        expiresAt: '2025-01-20', 
+        expiresAt: '2026-01-20', 
         locker: null,
-        checkIns: ['2025-12-02', '2025-12-03', '2025-12-04', '2025-12-05', '2025-12-06', '2025-12-07', '2025-12-08', '2025-12-09', '2025-12-10', '2025-12-11', '2025-12-12', '2025-12-13', '2025-12-14'],
+        checkIns: ['2025-12-03', '2025-12-04', '2025-12-05', '2025-12-06', '2025-12-07', '2025-12-08', '2025-12-09', '2025-12-10', '2025-12-11', '2025-12-12', '2025-12-13', '2025-12-14', '2025-12-15'],
         hasReceivedStreakCoupon: false
     },
     { 
@@ -113,11 +113,10 @@ const couponData = {
     "STREAK14": 0.05
 };
 
-// --- Locker Data Persistence ---
+
 const LOCKER_DATA_KEY = 'gymLockerData';
 const CURRENT_LOCKER_DATA_VERSION = 2;
 
-// We wrap the initial data in a function to avoid polluting the global scope
 function getInitialLockerData() {
     return {
         version: CURRENT_LOCKER_DATA_VERSION,
@@ -138,23 +137,22 @@ function getInitialLockerData() {
     };
 }
 
-// Immediately-invoked function to initialize or migrate locker data in localStorage
 (function() {
     const storedDataString = localStorage.getItem(LOCKER_DATA_KEY);
 
     if (!storedDataString) {
-        // If no data exists, initialize it
+        
         localStorage.setItem(LOCKER_DATA_KEY, JSON.stringify(getInitialLockerData()));
     } else {
         try {
             const storedData = JSON.parse(storedDataString);
-            // Check if the stored data has a version number and if it's outdated
+            
             if (!storedData.version || storedData.version < CURRENT_LOCKER_DATA_VERSION) {
-                // If outdated or versionless, overwrite with new data
+                
                 localStorage.setItem(LOCKER_DATA_KEY, JSON.stringify(getInitialLockerData()));
             }
         } catch (e) {
-            // If parsing fails, overwrite with fresh data
+            
             console.error("Failed to parse locker data, re-initializing.", e);
             localStorage.setItem(LOCKER_DATA_KEY, JSON.stringify(getInitialLockerData()));
         }

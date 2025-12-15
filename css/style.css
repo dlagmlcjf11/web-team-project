@@ -3,8 +3,6 @@
 @import url('login.css');
 @import url('profile.css');
 
-
-/* Page-specific styles */
 .hero-section {
     background: url('/images/index_img.jpg') no-repeat center center/cover;
     height: 400px;

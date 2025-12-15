@@ -1,4 +1,3 @@
-/* User Menu & Login Modal Styles */
 .user-menu {
     position: relative;
 }
@@ -17,7 +16,7 @@
 }
 
 .user-dropdown {
-    display: none; /* Hidden by default */
+    display: none;
     position: absolute;
     top: 50px;
     right: 0;
@@ -37,7 +36,7 @@
 .user-dropdown button {
     display: block;
     width: 100%;
-    text-align: right; /* Changed to right */
+    text-align: right;
     padding: 8px 12px;
     color: var(--color-text);
     font-weight: 500;
@@ -57,14 +56,14 @@
     font-weight: 600;
     color: var(--color-text);
     text-align: right;
-    border-bottom: 1px solid #d3d3d3; /* More visible gray */
+    border-bottom: 1px solid #d3d3d3;
     margin-bottom: 5px;
 }
 
 
-/* Modal Styles */
+
 .modal-overlay {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -101,7 +100,7 @@
     cursor: pointer;
 }
 
-/* Prettier Login Modal Styles */
+
 .login-title {
     text-align: center;
     margin-bottom: 30px;
@@ -123,12 +122,12 @@
     box-shadow: 0 0 0 3px rgba(51, 61, 75, 0.1);
 }
 
-.input-icon { /* Styles for the <img> icons */
+.input-icon { 
     width: 20px;
     height: 20px;
     margin-right: 12px;
     flex-shrink: 0;
-    opacity: 0.6; /* Similar to previous SVG dimming */
+    opacity: 0.6; 
 }
 
 .form-group-icon input {
@@ -149,8 +148,8 @@
 .login-submit-btn {
     display: block;
     width: 100%;
-    padding: 10px 0; /* Reduced vertical padding */
-    font-size: 1rem; /* Reduced font size */
+    padding: 10px 0; 
+    font-size: 1rem; 
     margin-top: 45px;
-    border-radius: 16px; /* More rounded */
+    border-radius: 16px; 
 }
