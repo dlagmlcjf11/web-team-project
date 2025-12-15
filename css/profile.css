@@ -1,24 +1,23 @@
-/* Profile Page Specific Styles */
 .profile-title {
     text-align: center;
-    margin-bottom: 30px; /* Keep consistent margin */
+    margin-bottom: 30px;
     font-size: 2.2rem;
     color: var(--color-primary);
-    position: relative; /* Needed for pseudo-element positioning */
-    padding-bottom: 15px; /* Space for the underline */
+    position: relative;
+    padding-bottom: 15px;
 }
 
 .profile-title::after {
     content: '';
     display: block;
-    width: 50px; /* Width of the decorative line */
-    height: 3px; /* Thickness of the line */
-    background-color: var(--color-primary); /* Use primary color */
+    width: 50px;
+    height: 3px;
+    background-color: var(--color-primary);
     border-radius: 2px;
     position: absolute;
-    bottom: 0; /* Position below the text */
+    bottom: 0;
     left: 50%;
-    transform: translateX(-50%); /* Center the line */
+    transform: translateX(-50%);
 }
 
 .profile-card-container {
@@ -58,7 +57,7 @@
     color: var(--color-primary);
 }
 
-/* Status colors */
+
 .status-active {
     color: green;
     font-weight: bold;
@@ -140,12 +139,12 @@
     transform: scale(1.2);
 }
 
-/* New Styles for password-icon */
+
 .password-icon {
-    width: 16px; /* Reduced size */
-    height: 16px; /* Reduced size */
-    vertical-align: middle; /* Align with text */
-    margin: -2px 0; /* Slight vertical adjustment */
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin: -2px 0;
     opacity: 0.7;
 }
 
@@ -153,21 +152,21 @@
     width: 100%;
     margin-top: 10px;
     padding: 10px;
-    border: 1px solid var(--color-primary); /* Solid border */
-    background-color: transparent; /* Ghost button initially */
+    border: 1px solid var(--color-primary);
+    background-color: transparent;
     color: var(--color-primary);
-    border-radius: 25px; /* More rounded */
+    border-radius: 25px;
     transition: all 0.2s ease-in-out;
 }
 
 #register-locker-btn:hover {
-    background-color: var(--color-primary); /* Filled on hover */
-    color: white; /* White text on hover */
+    background-color: var(--color-primary);
+    color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
-/* --- Styles for Streak Tracker --- */
+
 .streak-tracker {
     background-color: var(--color-surface);
     border-radius: var(--border-radius-m);
@@ -252,7 +251,7 @@
 }
 
 .calendar-day.checked-in {
-    background-color: #a5d6a7; /* A pleasant green */
+    background-color: #a5d6a7;
     color: var(--color-surface);
     font-weight: bold;
 }
@@ -261,10 +260,10 @@
     border: 2px solid var(--color-primary);
 }
 
-/* --- Styles for Collapsible Streak Tracker --- */
+
 .streak-tracker-header {
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
 }
 
 .streak-header-controls {
@@ -281,27 +280,27 @@
 }
 
 .streak-tracker-body {
-    max-height: 500px; /* Adjust as needed, should be larger than the content */
+    max-height: 500px;
     overflow: hidden;
     transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out, margin 0.4s ease-in-out;
 }
 
 .streak-tracker.collapsed .streak-tracker-body {
     max-height: 0;
-    margin-top: -20px; /* To reduce space when collapsed */
+    margin-top: -20px;
     padding-top: 0;
     padding-bottom: 0;
 }
 
-/* Styles for show/hide password feature */
+
 .locker-password-display {
     display: flex;
     align-items: center;
-    gap: 8px; /* Space between password text and icon */
+    gap: 8px;
 }
 
 .password-toggle-icon {
-    width: 20px; /* Size of the eye icon */
+    width: 20px;
     height: 20px;
     cursor: pointer;
     opacity: 0.7;

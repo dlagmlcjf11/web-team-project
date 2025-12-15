@@ -79,7 +79,7 @@ h4 { font-size: 1.25rem; }
 }
 
 .header-content a:hover {
-    text-decoration: none; /* Remove underline specifically for header links */
+    text-decoration: none;
 }
 
 .logo a {
@@ -109,7 +109,7 @@ h4 { font-size: 1.25rem; }
 
 .main-nav ul {
     display: flex;
-    gap: 10px; /* Reduced gap to account for padding on links */
+    gap: 10px;
 }
 
 .main-nav a {

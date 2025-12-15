@@ -1,26 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
     const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
 
-    // --- 1. Auth Guard ---
+
     if (!loggedInUser) {
         alert('로그인이 필요합니다.');
         window.location.href = 'index.html';
         return;
     }
 
-    // --- Main Display Function ---
     window.displayUserProfile = function() {
         const currentUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
 
-        // Render standard profile info
+        
         displayStandardInfo(currentUser);
-        // Render locker info
+        
         displayLockerInfo(currentUser);
-        // Render the new streak tracker
+        
         renderStreakTracker(currentUser);
     };
 
-    // --- Helper Functions ---
+
     function displayStandardInfo(user) {
         const userNameEl = document.getElementById('profile-user-name');
         const registrationStatusEl = document.getElementById('profile-registration-status');
@@ -79,15 +78,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    let isStreakTrackerCollapsed = false; // State for the toggle
+    let isStreakTrackerCollapsed = false;
 
-    // --- Streak Tracker Functions ---
+
     function renderStreakTracker(user) {
         const placeholder = document.getElementById('streak-tracker-placeholder');
         if (!placeholder) return;
 
         const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
         const hasCheckedInToday = user.checkIns.includes(todayStr);
         const currentStreak = calculateCurrentStreak(user.checkIns);
 
@@ -114,14 +116,14 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         document.getElementById('streak-tracker-toggle').addEventListener('click', (e) => {
-            // Don't toggle if the check-in button was clicked
+            
             if (e.target.id === 'check-in-btn') return;
             
             isStreakTrackerCollapsed = !isStreakTrackerCollapsed;
             document.querySelector('.streak-tracker').classList.toggle('collapsed');
             document.getElementById('streak-toggle-indicator').textContent = isStreakTrackerCollapsed ? '+' : '-';
             
-            // Persist state in sessionStorage
+            
             sessionStorage.setItem('streakTrackerState', isStreakTrackerCollapsed ? 'collapsed' : 'expanded');
         });
 
@@ -130,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Restore collapse state on load
+
     if (sessionStorage.getItem('streakTrackerState') === 'collapsed') {
         isStreakTrackerCollapsed = true;
     }
@@ -138,12 +140,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleCheckIn(user) {
         const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
         
-        // Update user object
+        
         user.checkIns.push(todayStr);
         
-        // Recalculate streak and check for reward
+        
         const newStreak = calculateCurrentStreak(user.checkIns);
         const STREAK_GOAL = 14;
 
@@ -152,10 +157,10 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(`축하합니다! ${STREAK_GOAL}일 연속 출석을 달성하여 5% 할인 쿠폰(STREAK5)을 획득했습니다!`);
         }
 
-        // Save updated user to sessionStorage
+        
         sessionStorage.setItem('loggedInUser', JSON.stringify(user));
         
-        // Re-render the tracker
+        
         renderStreakTracker(user);
     }
     
@@ -165,22 +170,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const uniqueCheckInDates = [...new Set(checkIns)].map(dateStr => {
             const [year, month, day] = dateStr.split('-').map(Number);
             return new Date(year, month - 1, day);
-        }).sort((a, b) => b - a); // Sort dates descending
+        }).sort((a, b) => b - a); 
     
         let streak = 0;
         let today = new Date();
         today.setHours(0, 0, 0, 0);
     
-        // Check if the latest check-in is today or yesterday
+        
         const mostRecentCheckIn = uniqueCheckInDates[0];
         const diff = today.getTime() - mostRecentCheckIn.getTime();
         const daysSinceLastCheckIn = diff / (1000 * 3600 * 24);
     
         if (daysSinceLastCheckIn > 1) {
-            return 0; // Streak is broken
+            return 0; 
         }
     
-        // If we are here, the streak is at least 1
+        
         streak = 1;
         let expectedDate = new Date(mostRecentCheckIn);
         expectedDate.setDate(expectedDate.getDate() - 1);
@@ -189,9 +194,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentCheckIn = uniqueCheckInDates[i];
             if (currentCheckIn.getTime() === expectedDate.getTime()) {
                 streak++;
-                expectedDate.setDate(expectedDate.getDate() - 1); // Expect the day before
+                expectedDate.setDate(expectedDate.getDate() - 1); 
             } else {
-                break; // Streak is broken
+                break; 
             }
         }
         return streak;
@@ -205,25 +210,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const firstDayOfMonth = new Date(year, month, 1);
         const lastDayOfMonth = new Date(year, month + 1, 0);
         const daysInMonth = lastDayOfMonth.getDate();
-        const startDayOfWeek = firstDayOfMonth.getDay(); // 0 (Sun) to 6 (Sat)
+        const startDayOfWeek = firstDayOfMonth.getDay(); 
     
         const checkInSet = new Set(checkIns);
         
         let html = `<div class="streak-calendar-header">${year}년 ${month + 1}월</div>`;
         html += `<div class="streak-calendar">`;
         
-        // Day headers
+        
         const days = ['일', '월', '화', '수', '목', '금', '토'];
         days.forEach(day => {
             html += `<div class="calendar-day day-header">${day}</div>`;
         });
     
-        // Empty slots for days before the 1st
+        
         for (let i = 0; i < startDayOfWeek; i++) {
             html += `<div class="calendar-day"></div>`;
         }
     
-        // Fill in the days of the month
+        
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             let classes = 'calendar-day';
@@ -239,6 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return html;
     }
 
-    // --- Initial Load ---
+    
     window.displayUserProfile();
 });

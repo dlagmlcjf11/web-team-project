@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modalPlaceholder = document.getElementById('modal-placeholder');
-    let selectedLockerNumber = null; // State to hold the selected locker
-    const LOCKER_DATA_KEY = 'gymLockerData'; // Consistent key
+    let selectedLockerNumber = null;
+    const LOCKER_DATA_KEY = 'gymLockerData';
 
-    // --- Modal Control ---
+
     window.openLockerModal = () => {
         const modal = document.getElementById('locker-modal');
         const overlay = document.getElementById('locker-modal-overlay');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- UI Rendering and Event Handling ---
+
     fetch('locker_modal.html')
         .then(response => response.text())
         .then(html => {
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('locker-password').focus();
     }
 
-    // --- Registration Logic ---
+
     function handleLockerRegistration(event) {
         event.preventDefault();
         const passwordInput = document.getElementById('locker-password');
