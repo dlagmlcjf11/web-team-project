@@ -1,0 +1,121 @@
+/* FAQ Specific Styles */
+.faq-list {
+    margin-top: 20px;
+}
+
+.faq-item {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-m);
+    margin-bottom: 15px; /* Increased margin */
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Added box-shadow */
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Added transition */
+}
+
+.faq-item:hover {
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Enhanced shadow on hover */
+}
+
+.faq-question {
+    padding: 15px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.faq-question:hover {
+    background-color: var(--color-background);
+}
+
+.faq-question::after {
+    content: '+';
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+.faq-question.active::after {
+    content: '−'; /* Changed to a proper minus sign */
+}
+
+.faq-answer {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+    color: var(--color-text-light);
+    line-height: 1.7;
+}
+
+.faq-answer.active {
+    padding: 10px 20px 20px;
+    max-height: 200px; /* Fixed height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* FAQ Search Styles */
+.faq-search-container {
+    margin-bottom: 20px;
+    max-width: 600px; /* Shorter width */
+    margin-left: auto;
+    margin-right: auto; /* Center the container */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically align items */
+    border: 1px solid var(--color-border); /* Add border to container */
+    border-radius: 25px; /* Rounded corners for the container */
+    padding: 8px 15px; /* Padding for the container */
+    background-color: var(--color-surface);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.faq-search-container:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(51, 61, 75, 0.1);
+}
+
+.search-icon { /* Styles for the <img> search icon */
+    width: 20px; /* Size of the icon */
+    height: 20px;
+    margin-right: 10px; /* Space between icon and input */
+    opacity: 0.6; /* Slightly dim the icon */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+#faq-search {
+    flex-grow: 1; /* Allow input to take available space */
+    border: none; /* Remove individual input border */
+    outline: none; /* Remove outline on focus */
+    padding: 0; /* Remove padding from input, as container has padding */
+    font-size: 1rem;
+    background-color: transparent; /* Transparent background */
+    color: var(--color-text);
+}
+
+#faq-search::placeholder {
+    color: var(--color-text-light);
+}
+
+/* FAQ Section Title Styles */
+.faq-section-title {
+    text-align: center;
+    margin-bottom: 30px; /* Increased margin for spacing */
+    position: relative; /* Needed for pseudo-element positioning */
+}
+
+.faq-section-title::after {
+    content: '';
+    display: block;
+    width: 50px; /* Width of the decorative line */
+    height: 3px; /* Thickness of the line */
+    background-color: var(--color-primary); /* Use primary color */
+    border-radius: 2px;
+    position: absolute;
+    bottom: -15px; /* Position below the text */
+    left: 50%;
+    transform: translateX(-50%); /* Center the line */
+}
